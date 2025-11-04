@@ -1,0 +1,19 @@
+{
+  "name": "rest-countries-app",
+  "version": "1.0.0",
+  "description": "Application to fetch country data by capital from REST Countries API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "rest-countries",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
