@@ -1,25 +1,36 @@
-const fetchBtn = document.getElementById('fetchBtn');
-const limitSelect = document.getElementById('limitSelect');
+const capitalInput = document.getElementById('capitalInput');
+const searchBtn = document.getElementById('searchBtn');
 const loading = document.getElementById('loading');
 const error = document.getElementById('error');
 const results = document.getElementById('results');
 const tableBody = document.getElementById('tableBody');
-const resultCount = document.getElementById('resultCount');
 
-fetchBtn.addEventListener('click', fetchStations);
+searchBtn.addEventListener('click', searchCountry);
+capitalInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        searchCountry();
+    }
+});
 
-async function fetchStations() {
-    const limit = limitSelect.value;
+async function searchCountry() {
+    const capital = capitalInput.value.trim();
+    
+    if (!capital) {
+        showError('Proszę wpisać nazwę stolicy');
+        return;
+    }
     
     hideAll();
     loading.style.display = 'block';
     
     try {
-        const response = await fetch(`/api/stations?limit=${limit}`);
+        const response = await fetch(`https://restcountries.com/v3.1/capital/${capital}`);
         
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Błąd podczas pobierania danych');
+            if (response.status === 404) {
+                throw new Error('Nie znaleziono kraju z podaną stolicą');
+            }
+            throw new Error('Błąd podczas pobierania danych');
         }
         
         const data = await response.json();
@@ -32,35 +43,29 @@ async function fetchStations() {
     }
 }
 
-function displayResults(data) {
+function displayResults(countries) {
     tableBody.innerHTML = '';
     
-    if (!data.results || data.results.length === 0) {
-        showError('Nie znaleziono żadnych stacji');
-        return;
-    }
-    
-    data.results.forEach(station => {
+    countries.forEach(country => {
         const row = document.createElement('tr');
         
-        const stationId = station.id || 'N/A';
-        const name = station.name || 'N/A';
-        const state = station.state || 'N/A';
-        const latitude = station.latitude !== undefined ? station.latitude.toFixed(4) : 'N/A';
-        const longitude = station.longitude !== undefined ? station.longitude.toFixed(4) : 'N/A';
+        const name = country.name.common || 'N/A';
+        const capital = country.capital ? country.capital[0] : 'N/A';
+        const population = country.population ? country.population.toLocaleString('pl-PL') : 'N/A';
+        const region = country.region || 'N/A';
+        const subregion = country.subregion || 'N/A';
         
         row.innerHTML = `
-            <td>${stationId}</td>
             <td>${name}</td>
-            <td>${state}</td>
-            <td>${latitude}</td>
-            <td>${longitude}</td>
+            <td>${capital}</td>
+            <td>${population}</td>
+            <td>${region}</td>
+            <td>${subregion}</td>
         `;
         
         tableBody.appendChild(row);
     });
     
-    resultCount.textContent = `Znaleziono ${data.results.length} stacji (z ${data.metadata.resultset.count} dostępnych)`;
     results.style.display = 'block';
 }
 

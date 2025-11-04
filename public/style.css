@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
     background: white;
     border-radius: 15px;
@@ -34,16 +34,27 @@ h1 {
     font-size: 0.95em;
 }
 
-.controls {
+.search-box {
     display: flex;
     gap: 10px;
     margin-bottom: 30px;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
 }
 
-#fetchBtn {
+#capitalInput {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#capitalInput:focus {
+    border-color: #2563eb;
+}
+
+#searchBtn {
     padding: 12px 30px;
     font-size: 16px;
     background: #2563eb;
@@ -55,29 +66,16 @@ h1 {
     font-weight: 600;
 }
 
-#fetchBtn:hover {
+#searchBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
 }
 
-#fetchBtn:active {
+#searchBtn:active {
     transform: translateY(0);
 }
 
-#limitSelect {
-    padding: 12px 20px;
-    font-size: 16px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    cursor: pointer;
-}
-
-#limitSelect:focus {
-    border-color: #2563eb;
-}
-
-#loading {
+.loading {
     text-align: center;
     padding: 30px;
     color: #2563eb;
@@ -85,7 +83,7 @@ h1 {
     font-weight: 500;
 }
 
-#error {
+.error {
     background: #fee;
     border: 1px solid #fcc;
     color: #c33;
@@ -103,12 +101,6 @@ h1 {
     color: #333;
     margin-bottom: 20px;
     font-size: 1.5em;
-}
-
-#resultCount {
-    color: #666;
-    margin-bottom: 15px;
-    font-size: 0.95em;
 }
 
 table {
@@ -136,18 +128,18 @@ th {
 
 td {
     padding: 15px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #eee;
 }
 
-tr:hover {
-    background: #f9f9f9;
+tbody tr:hover {
+    background: #f8f9ff;
 }
 
-tr:last-child td {
+tbody tr:last-child td {
     border-bottom: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .container {
         padding: 20px;
     }
@@ -156,11 +148,15 @@ tr:last-child td {
         font-size: 1.5em;
     }
     
+    .search-box {
+        flex-direction: column;
+    }
+    
     table {
-        font-size: 0.85em;
+        font-size: 0.9em;
     }
     
     th, td {
-        padding: 10px 8px;
+        padding: 10px;
     }
 }
