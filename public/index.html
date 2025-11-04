@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REST Countries - Wyszukiwanie według stolicy</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stacje NOAA</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Wyszukiwanie kraju według stolicy</h1>
-        <p class="subtitle">Źródło danych: REST Countries API</p>
-        
-        <div class="search-box">
-            <input type="text" id="capitalInput" placeholder="Wpisz nazwę stolicy (np. Warsaw, Berlin, Paris)">
-            <button id="searchBtn">Szukaj</button>
-        </div>
-
-        <div id="loading" class="loading" style="display: none;">
-            Ładowanie danych...
-        </div>
-
-        <div id="error" class="error" style="display: none;"></div>
-
-        <div id="results" class="results" style="display: none;">
-            <h2>Wyniki wyszukiwania:</h2>
-            <table id="countryTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Capital</th>
-                        <th>Population</th>
-                        <th>Region</th>
-                        <th>Subregion</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
-        </div>
+  <div class="container">
+    <h1>Stacje klimatyczne NOAA</h1>
+    <p class="subtitle">Źródło danych: NOAA Climate Data Online API</p>
+    
+    <div class="controls">
+      <button id="fetchBtn">Pobierz stacje</button>
+      <select id="limitSelect">
+        <option value="25">25 stacji</option>
+        <option value="100" selected>100 stacji</option>
+        <option value="500">500 stacji</option>
+        <option value="1000">1000 stacji</option>
+      </select>
     </div>
-
-    <script src="app.js"></script>
+    
+    <div id="loading" style="display: none;">Ładowanie danych...</div>
+    <div id="error" style="display: none;"></div>
+    
+    <div id="results" style="display: none;">
+      <h2>Wyniki</h2>
+      <p id="resultCount"></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Station ID</th>
+            <th>Name</th>
+            <th>State</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,70 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const tokenInput = document.getElementById('token');
+  const fetchBtn = document.getElementById('fetchBtn');
+  const status = document.getElementById('status');
+  const table = document.getElementById('stationsTable');
+  const tbody = document.getElementById('stationsBody');
+  const limitInput = document.getElementById('limit');
+
+  fetchBtn.addEventListener('click', async () => {
+    tbody.innerHTML = '';
+    table.hidden = true;
+    status.textContent = 'Ładowanie...';
+
+    const token = tokenInput.value.trim();
+    const limit = parseInt(limitInput.value, 10) || 1000;
+
+    try {
+      // Call our proxy endpoint
+      const url = new URL('/api/stations', window.location.origin);
+      url.searchParams.set('limit', String(limit));
+      if (token) url.searchParams.set('token', token);
+
+      const resp = await fetch(url.toString());
+      if (!resp.ok) {
+        const err = await resp.json().catch(()=>null);
+        status.textContent = `Błąd: ${resp.status} ${resp.statusText}` + (err && err.error ? ` — ${JSON.stringify(err.error)}` : '');
+        return;
+      }
+      const data = await resp.json();
+      const stations = data.results || [];
+      if (stations.length === 0) {
+        status.textContent = 'Brak stacji w odpowiedzi.';
+        return;
+      }
+
+      for (const s of stations) {
+        const tr = document.createElement('tr');
+
+        const idTd = document.createElement('td');
+        idTd.textContent = s.id || s.station || '';
+        tr.appendChild(idTd);
+
+        const nameTd = document.createElement('td');
+        nameTd.textContent = s.name || '';
+        tr.appendChild(nameTd);
+
+        const stateTd = document.createElement('td');
+        // NOAA sometimes uses 'state' or in 'mindate' object — try common fields
+        stateTd.textContent = s.state || s.fips || '';
+        tr.appendChild(stateTd);
+
+        const latTd = document.createElement('td');
+        latTd.textContent = (s.latitude !== undefined ? s.latitude : (s.latitude === 0 ? '0' : '')) || (s.latitude === undefined && s.locality ? '' : '');
+        tr.appendChild(latTd);
+
+        const lonTd = document.createElement('td');
+        lonTd.textContent = (s.longitude !== undefined ? s.longitude : '') || '';
+        tr.appendChild(lonTd);
+
+        tbody.appendChild(tr);
+      }
+
+      table.hidden = false;
+      status.textContent = `Pobrano ${stations.length} stacji.`;
+    } catch (e) {
+      status.textContent = `Błąd podczas pobierania: ${e.message || e}`;
+      console.error(e);
+    }
+  });
+});
